@@ -1,0 +1,116 @@
+package com.example.blogApp.serviceImpl;
+
+import com.example.blogApp.entity.Comment;
+import com.example.blogApp.entity.Post;
+import com.example.blogApp.entity.Users;
+import com.example.blogApp.exception.ResourceNotFoundException;
+import com.example.blogApp.repository.CommentRepository;
+import com.example.blogApp.repository.PostRepository;
+import com.example.blogApp.repository.UsersRepository;
+import com.example.blogApp.requestDTO.CommentRequestDTO;
+import com.example.blogApp.responseDTO.CommentResponseDTO;
+import com.example.blogApp.service.CommentService;
+
+import java.util.List;
+
+public class CommentServiceImpl implements CommentService {
+
+
+    private CommentRepository commentRepository;
+    private UsersRepository usersRepository;
+    private PostRepository postRepository;
+
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              UsersRepository usersRepository,
+                              PostRepository postRepository) {
+
+        this.commentRepository = commentRepository;
+    }
+
+    @Override
+    public CommentResponseDTO createComment(CommentRequestDTO requestDTO) {
+
+        Users user = usersRepository.findById(requestDTO.getAuthorId()).orElseThrow(
+                () -> new RuntimeException("User id not found : " + requestDTO.getAuthorId()));
+
+        Post post = postRepository.findById(requestDTO.getPostId()).orElseThrow(
+                () -> new RuntimeException("Post id not found : " + requestDTO.getPostId()));
+
+        Comment comment = new Comment();
+
+        comment.setCommentString(requestDTO.getCommentString());
+        comment.setAuthor(user);
+        comment.setPost(post);
+
+        comment save = commentRepository.save(comment);
+        return new CommentResponseDTO(save);
+
+    }
+    @Override
+    public List<CommentResponseDTO> getAllCommentByAuthor(Long authorId) {
+
+        List<Comment> all = commentRepository.findByAuthor_Id(authorId);
+
+        if (all.isEmpty())
+            throw new ResourceNotFoundException("No, Comment Exist with this user ");
+
+        return all.stream().map(CommentResponseDTO::new).toList();
+
+
+
+//        List<CommentResponseDTO> commentResponseDTOS = new ArrayList<>();
+//        for (Comment comment : all){
+//            CommentResponseDTO commentRep = new CommentResponseDTO(comment);
+//            commentResponseDTOS.add(commentRep);
+//        }
+//        return commentResponseDTOS;
+
+    }
+
+    @Override
+    public CommentResponseDTO commentUpdate(Long commentId, CommentRequestDTO requestDTO) {
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow( () -> new ResourceNotFoundException("Comment id not found : "
+                        + commentId));
+
+
+        comment.setCommentString(requestDTO.getCommentString());
+
+        Comment save = commentRepository.save(comment);
+
+        CommentResponseDTO commentResponseDTO = new CommentResponseDTO(save);
+
+        return commentResponseDTO;
+    }
+
+
+
+
+
+    @Override
+    public List<CommentResponseDTO> getAllComment() {
+
+        List<Comment> commentList = commentRepository.findAll();
+
+        if (commentList.isEmpty())
+            throw new ResourceNotFoundException("No Comment [exist in DB");
+
+        return commentList.stream().map(CommentResponseDTO::new).toList();
+    }
+
+    @Override
+    public String deleteComment(Long commentId) {
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow( () -> new ResourceNotFoundException("Comment id not found : "
+                        + commentId));
+
+
+        commentRepository.delete(comment);
+        return "Comment deleted successfully!";
+    }
+
+
+}
+
