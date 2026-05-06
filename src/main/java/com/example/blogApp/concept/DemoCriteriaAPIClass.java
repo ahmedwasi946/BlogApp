@@ -1,7 +1,5 @@
 package com.example.blogApp.concept;
 
-import com.example.blogApp.entity.Products;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;

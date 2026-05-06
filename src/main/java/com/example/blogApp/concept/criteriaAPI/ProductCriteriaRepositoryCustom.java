@@ -1,7 +1,5 @@
 package com.example.blogApp.concept.criteriaAPI;
 
-import com.example.blogApp.entity.Products;
-
 import java.util.List;
 
 public interface ProductCriteriaRepositoryCustom {
