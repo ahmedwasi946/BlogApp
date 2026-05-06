@@ -1,31 +1,33 @@
 package com.example.blogApp.concept.criteriaAPI;
 
+import com.example.blogApp.entity.Product;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductCriteriaRepositoryImpl {
+@Repository
+public  class ProductRepositoryImpl implements ProductRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Products> searchProducts(
-        String name;
-        Double minPrice;
-        Double maxPrice;
-        String category;)
-    {
+    public List<Product> searchProducts(
+            String name,
+            Double minPrice,
+        Double maxPrice,
+        String category) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
-        CriteriaQuery<Products> query = cb.createQuery(Products.class);
+        CriteriaQuery<Product> query = cb.createQuery(Product.class);
 
-        Root<Products> root = query.from(Products.class);
+        Root<Product> root = query.from(Product.class);
 
 
         List<Predicate> predicates = new ArrayList<>();

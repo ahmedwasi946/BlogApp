@@ -2,7 +2,7 @@ package com.example.blogApp.concept.criteriaAPI;
 
 import java.util.List;
 
-public interface ProductCriteriaRepositoryCustom {
+public interface ProductRepositoryCustom {
     List<Products> searchProducts(String name,
                                   Double minPrice,
                                   Double maxPrice,
