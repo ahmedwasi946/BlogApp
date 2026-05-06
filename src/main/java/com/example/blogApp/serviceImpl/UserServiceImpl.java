@@ -8,13 +8,18 @@ import com.example.blogApp.requestDTO.UserRequestDTO;
 import com.example.blogApp.responseDTO.UsersResponseDTO;
 import com.example.blogApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl  implements UserService {
+
+
     private UsersRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public UserServiceImpl(UsersRepository usersRepository) {
         this.usersRepository = usersRepository;
@@ -108,4 +113,3 @@ public class UserServiceImpl  implements UserService {
 
 
 }
-
